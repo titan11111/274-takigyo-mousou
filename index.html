@@ -118,7 +118,7 @@ body.titling #hud{display:none}
 <div id="banner"></div>
 <div id="combo"></div>
 
-<div id="title" class="show" aria-hidden="true" style="pointer-events:none">
+<div id="title" class="show" role="button" tabindex="0" aria-label="修行を始める">
   <div class="grain"></div>
   <div class="vig"></div>
   <div class="bar top"></div><div class="bar bot"></div>
@@ -936,8 +936,15 @@ function showResult(win){
   $('resStats').innerHTML=`撃破 ${Math.min(kills,108)}／108　最大連射 ${maxCombo}　修行時間 ${sec}秒`;
   $('result').classList.add('show');$('againBtn').focus();
 }
+function beginFromTitle(e){
+  if(state!=='title')return;
+  if(e){e.preventDefault();try{e.currentTarget.setPointerCapture(e.pointerId);}catch(_){}}
+  startGame();
+}
+$('title').addEventListener('pointerdown',beginFromTitle);
+$('title').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')beginFromTitle(e);});
 $('openBtn').addEventListener('click',()=>{if(state==='title')startGame();});
-$('openBtn').addEventListener('pointerdown',()=>{initAudio();},{once:true});
+$('openBtn').addEventListener('pointerdown',e=>{initAudio();if(state==='title'){e.preventDefault();startGame();}});
 setInterval(()=>{if(state!=='title')return;const d=new Date(),z=n=>String(n).padStart(2,'0');
   $('clock').textContent=`${d.getFullYear()}.${z(d.getMonth()+1)}.${z(d.getDate())}　${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
   $('wt').textContent=(6.4+Math.random()*.8).toFixed(1);$('wp').textContent=(2.3+Math.random()*.25).toFixed(2);$('bn').textContent=(Math.random()*.08).toFixed(3);},1000);
