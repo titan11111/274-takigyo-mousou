@@ -109,7 +109,16 @@ body.titling #hud{display:none}
     <meta name="twitter:card" content="summary">
 </head>
 <body>
-<button type="button" id="openBtn" aria-label="修行を始める" style="position:fixed;left:10px;top:calc(env(safe-area-inset-top,0px) + 52px);width:48px;height:48px;z-index:6;opacity:0.03;border:0;padding:0;margin:0;background:transparent;cursor:pointer;touch-action:none">開始</button>
+<div id="title" class="show" role="button" tabindex="0" aria-label="修行を始める">
+  <div class="grain"></div><div class="vig"></div><div class="bar top"></div><div class="bar bot"></div>
+  <div class="scan"></div><div class="frame"><i></i><i></i><i></i><i></i></div>
+  <div class="osd tl"><span class="rec">●</span> REC　<span id="camLbl">CAM-01　滝壺</span></div>
+  <div class="osd tr" id="clock">----.--.--　--:--:--</div>
+  <div class="osd bl">SUBJECT No.108　水温 <span id="wt">6.8</span>℃　水圧 <span id="wp">2.41</span>t/㎡</div>
+  <div class="osd br">煩悩検出 <span id="bn">0.000</span></div>
+  <div class="ttl"><h1 id="ttlH"><span>滝行と</span><span class="l2">煩悩</span></h1></div>
+  <div class="tap">[ 触れて　修行を開始 ]</div><div id="cut"></div>
+</div>
 <div id="hud">
   <div id="gaugeWrap"><span class="lbl">煩悩</span><div id="gauge"><div id="gaugeFill"></div></div><span id="gaugePct">0%</span></div>
   <div id="kills">撃破 <b id="killN">0</b>/108</div>
@@ -118,20 +127,6 @@ body.titling #hud{display:none}
 <div id="banner"></div>
 <div id="combo"></div>
 
-<div id="title" class="show" role="button" tabindex="0" aria-label="修行を始める">
-  <div class="grain"></div>
-  <div class="vig"></div>
-  <div class="bar top"></div><div class="bar bot"></div>
-  <div class="scan"></div>
-  <div class="frame"><i></i><i></i><i></i><i></i></div>
-  <div class="osd tl"><span class="rec">●</span> REC　<span id="camLbl">CAM-01　滝壺</span></div>
-  <div class="osd tr" id="clock">----.--.--　--:--:--</div>
-  <div class="osd bl">SUBJECT No.108　水温 <span id="wt">6.8</span>℃　水圧 <span id="wp">2.41</span>t/㎡</div>
-  <div class="osd br">煩悩検出 <span id="bn">0.000</span></div>
-  <div class="ttl"><h1 id="ttlH"><span>滝行と</span><span class="l2">煩悩</span></h1></div>
-  <div class="tap">[ 触れて　修行を開始 ]</div>
-  <div id="cut"></div>
-</div>
 <div id="flash"></div>
 
 <div id="result" class="ov">
@@ -914,7 +909,6 @@ function startGame(){
   initAudio();resetGame();state='play';startT=t;
   $('title').classList.remove('show');$('result').classList.remove('show');
   document.body.classList.remove('titling');renderer.domElement.classList.remove('bw');
-  $('openBtn').style.display='none';
   const fl=$('flash');fl.style.transition='none';fl.style.opacity=.9;requestAnimationFrame(()=>requestAnimationFrame(()=>{fl.style.transition='opacity 1.2s ease';fl.style.opacity=0;}));
   SFX.gong();setTimeout(()=>{if(state==='play')banner('妄想を、射よ',1800);},700);
   setTimeout(()=>monkSay('心頭滅却すれば火もまた涼し',2.2),600);
@@ -943,8 +937,6 @@ function beginFromTitle(e){
 }
 $('title').addEventListener('pointerdown',beginFromTitle);
 $('title').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')beginFromTitle(e);});
-$('openBtn').addEventListener('click',()=>{if(state==='title')startGame();});
-$('openBtn').addEventListener('pointerdown',e=>{initAudio();if(state==='title'){e.preventDefault();startGame();}});
 setInterval(()=>{if(state!=='title')return;const d=new Date(),z=n=>String(n).padStart(2,'0');
   $('clock').textContent=`${d.getFullYear()}.${z(d.getMonth()+1)}.${z(d.getDate())}　${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
   $('wt').textContent=(6.4+Math.random()*.8).toFixed(1);$('wp').textContent=(2.3+Math.random()*.25).toFixed(2);$('bn').textContent=(Math.random()*.08).toFixed(3);},1000);
